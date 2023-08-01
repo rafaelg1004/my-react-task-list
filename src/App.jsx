@@ -3,13 +3,15 @@ import React, { useState } from "react";
 import Header from "./components/Header";
 import TaskList from "./components/TaskList";
 import './App.css';
+import "./styles/styles.css";
 
 const App = () => {
   const [tasks, setTasks] = useState([
-    { id: 1, name: "Hacer la compra", completed: false },
-    { id: 2, name: "Hacer ejercicio", completed: false },
-    { id: 3, name: "Estudiar React", completed: false },
+    { id: 1, name: "Hacer la compra", completed: null},
+    { id: 2, name: "Hacer ejercicio", completed: null },
+    { id: 3, name: "Estudiar React", completed: null },
   ]);
+
 
   const [newTaskName, setNewTaskName] = useState("");
   const [editingTaskId, setEditingTaskId] = useState(null);
@@ -29,7 +31,7 @@ const App = () => {
       const newTask = {
         id: tasks.length + 1,
         name: newTaskName,
-        completed: false,
+        completed: null,
       };
       setTasks([...tasks, newTask]);
     }
@@ -47,11 +49,20 @@ const App = () => {
     const updatedTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(updatedTasks);
   };
+  const handleToggleComplete = (taskId) => {
+    const updatedTasks = tasks.map((task) =>
+      task.id === taskId ? { task, completed: !task.completed } : task
+    );
+    setTasks(updatedTasks);
+  };
 
   return (
     <div>
       <Header />
-      <TaskList tasks={tasks} onEdit={handleEditTask} onDelete={handleDeleteTask} />
+      <TaskList tasks={tasks}
+        onEdit={handleEditTask}
+        onDelete={handleDeleteTask}
+        onToggleComplete={handleToggleComplete} />
       <div>
         <input
           type="text"
