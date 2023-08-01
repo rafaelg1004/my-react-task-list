@@ -2,11 +2,12 @@
 import React, { useState } from "react";
 import Header from "./components/Header";
 import TaskList from "./components/TaskList";
+import './App.css';
 
 const App = () => {
   const [tasks, setTasks] = useState([
     { id: 1, name: "Hacer la compra", completed: false },
-    { id: 2, name: "Hacer ejercicio", completed: true },
+    { id: 2, name: "Hacer ejercicio", completed: false },
     { id: 3, name: "Estudiar React", completed: false },
   ]);
 
