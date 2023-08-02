@@ -1,21 +1,26 @@
 // src/App.jsx
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Header from "./components/Header";
 import TaskList from "./components/TaskList";
 import './App.css';
 import "./styles/styles.css";
 
 const App = () => {
-  const [tasks, setTasks] = useState([
-    { id: 1, name: "Hacer la compra", completed: null},
-    { id: 2, name: "Hacer ejercicio", completed: null },
-    { id: 3, name: "Estudiar React", completed: null },
-  ]);
-
-
+  const [tasks, setTasks] = useState(() => {
+    const storedTasks = JSON.parse(localStorage.getItem("tasks"));
+    return storedTasks || [];
+  });
   const [newTaskName, setNewTaskName] = useState("");
-  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editingTaskId, setEditingTaskId] = useState(false);
+ 
 
+// Cargar el listado de tareas desde el localStorage usando useEffect
+
+useEffect(() => {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}, [tasks]);
+
+  
   const handleAddTask = () => {
     if (newTaskName.trim() === "") return;
 
@@ -25,13 +30,13 @@ const App = () => {
         task.id === editingTaskId ? { ...task, name: newTaskName } : task
       );
       setTasks(updatedTasks);
-      setEditingTaskId(null);
+      setEditingTaskId(false);
     } else {
       // Agregar nueva tarea
       const newTask = {
         id: tasks.length + 1,
         name: newTaskName,
-        completed: null,
+        completed: false,
       };
       setTasks([...tasks, newTask]);
     }
@@ -51,7 +56,7 @@ const App = () => {
   };
   const handleToggleComplete = (taskId) => {
     const updatedTasks = tasks.map((task) =>
-      task.id === taskId ? { task, completed: !task.completed } : task
+      task.id === taskId ? { ...task, completed: !task.completed } : task
     );
     setTasks(updatedTasks);
   };
