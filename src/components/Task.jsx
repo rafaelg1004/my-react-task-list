@@ -25,14 +25,18 @@ const Task = ({ task, onEdit, onDelete, onToggleComplete }) => {
         style={{ textDecoration: task.completed ? "line-through" : "none" }}
         onClick={handleToggleComplete}
       >
-        {task.name}
+       <span>{task.name}
+       </span> 
+        
       </span>
+      <span>
       <button className="edit-button" onClick={handleEdit}>
         Editar
       </button>
       <button className="delete-button" onClick={handleDelete}>
         Borrar
       </button>
+      </span>
     </div>
   );
 };

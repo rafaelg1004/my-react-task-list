@@ -63,13 +63,9 @@ useEffect(() => {
 
   return (
     <div>
+      
       <Header />
-      <TaskList tasks={tasks}
-        onEdit={handleEditTask}
-        onDelete={handleDeleteTask}
-        onToggleComplete={handleToggleComplete} />
-      <div>
-        <input
+      <input
           type="text"
           value={newTaskName}
           onChange={(e) => setNewTaskName(e.target.value)}
@@ -77,6 +73,12 @@ useEffect(() => {
         <button onClick={handleAddTask}>
           {editingTaskId ? "Guardar Cambios" : "Agregar Tarea"}
         </button>
+      <TaskList tasks={tasks}
+        onEdit={handleEditTask}
+        onDelete={handleDeleteTask}
+        onToggleComplete={handleToggleComplete} />
+      <div>
+        
       </div>
     </div>
   );
