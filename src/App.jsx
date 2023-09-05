@@ -1,44 +1,36 @@
-// src/App.jsx
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import TaskList from "./components/TaskList";
-import './App.css';
+import "./App.css";
 import "./styles/styles.css";
+import useTaskManager from "./hooks/useTaskManager" // Importa el hook
 
 const App = () => {
-  const [tasks, setTasks] = useState(() => {
-    const storedTasks = JSON.parse(localStorage.getItem("tasks"));
-    return storedTasks || [];
-  });
   const [newTaskName, setNewTaskName] = useState("");
-  const [editingTaskId, setEditingTaskId] = useState(false);
- 
+  const { tasks, createTask, deleteTask, updateTask } = useTaskManager(
+    JSON.parse(localStorage.getItem("tasks")) || [] // Inicializa con tareas desde el localStorage
+  );
+  const [editingTaskId, setEditingTaskId] = useState(null);
 
-// Cargar el listado de tareas desde el localStorage usando useEffect
+  // Cargar el listado de tareas desde el localStorage usando useEffect
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
-useEffect(() => {
-  localStorage.setItem("tasks", JSON.stringify(tasks));
-}, [tasks]);
-
-  
   const handleAddTask = () => {
     if (newTaskName.trim() === "") return;
 
-    if (editingTaskId) {
+    if (editingTaskId !== null) {
       // Editar tarea existente
-      const updatedTasks = tasks.map((task) =>
-        task.id === editingTaskId ? { ...task, name: newTaskName } : task
-      );
-      setTasks(updatedTasks);
-      setEditingTaskId(false);
+      updateTask(editingTaskId, { name: newTaskName });
+      setEditingTaskId(null); // Finalizar la edición
     } else {
       // Agregar nueva tarea
-      const newTask = {
+      createTask({
         id: tasks.length + 1,
         name: newTaskName,
         completed: false,
-      };
-      setTasks([...tasks, newTask]);
+      });
     }
 
     setNewTaskName("");
@@ -50,36 +42,32 @@ useEffect(() => {
     setEditingTaskId(taskId);
   };
 
-  const handleDeleteTask = (taskId) => {
-    const updatedTasks = tasks.filter((task) => task.id !== taskId);
-    setTasks(updatedTasks);
-  };
   const handleToggleComplete = (taskId) => {
     const updatedTasks = tasks.map((task) =>
       task.id === taskId ? { ...task, completed: !task.completed } : task
     );
-    setTasks(updatedTasks);
+    updateTask(taskId, { completed: !tasks.find((task) => task.id === taskId).completed });
   };
 
   return (
     <div>
-      
       <Header />
       <input
-          type="text"
-          value={newTaskName}
-          onChange={(e) => setNewTaskName(e.target.value)}
-        />
-        <button onClick={handleAddTask}>
-          {editingTaskId ? "Guardar Cambios" : "Agregar Tarea"}
-        </button>
-      <TaskList tasks={tasks}
+        type="text"
+        value={newTaskName}
+        onChange={(e) => setNewTaskName(e.target.value)}
+      />
+      <button onClick={handleAddTask}>
+        {editingTaskId !== null ? "Guardar Cambios" : "Agregar Tarea"}
+      </button>
+      <TaskList
+        tasks={tasks}
         onEdit={handleEditTask}
-        onDelete={handleDeleteTask}
-        onToggleComplete={handleToggleComplete} />
-      <div>
-        
-      </div>
+        onDelete={deleteTask} // Utiliza la función deleteTask del hook
+        onToggleComplete={handleToggleComplete}
+        editingTaskId={editingTaskId}
+      />
+      <div></div>
     </div>
   );
 };
