@@ -27,6 +27,8 @@ const Task = ({ task, onEdit, onDelete, onToggleComplete }) => {
       >
        <span>{task.name}
        </span> 
+       <span>{task.description}
+       </span> 
         
       </span>
       <span>
