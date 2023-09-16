@@ -1,5 +1,5 @@
 
-import "./App.css";
+
 import Home from "./Pages/Home";
 import SobreNosotros from "./Pages/SobreNosotros";
 import ListaTarea from "./Pages/Tareas";
@@ -10,19 +10,17 @@ import { BrowserRouter ,Routes ,Route } from "react-router-dom";
 
 
 const App = () => {
-  
-  return (
-    <div>
+  return ( 
       <BrowserRouter>
       <Menu/>
-      <Routes>
+      <Routes> 
       <Route path="/" element={<Home/>}/>
       <Route path="sobre-nosotros" element={<SobreNosotros/>}/>
       <Route path="tareas" element={<ListaTarea/>}/>
       
       </Routes>
       </BrowserRouter>
-    </div>
+    
   );
 };
 

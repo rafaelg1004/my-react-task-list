@@ -4,6 +4,7 @@ import TaskList from "../components/TaskList";
 import "../App.css";
 import "../styles/styles.css";
 import useTaskManager from "../hooks/useTaskManager" // Importa el hook
+import { Box, Button, Input, FormControl, FormLabel, FormErrorMessage, Heading } from "@chakra-ui/react";
 
 const ListaTarea = () => {
   const [newTaskName, setNewTaskName] = useState("");
@@ -59,37 +60,46 @@ const ListaTarea = () => {
   };
 
   return (
-    <div>
+    <Box textAlign="center" mt="10">
       <Header />
-      <input
-        type="text"
-        value={newTaskName}
-        onChange={(e) => setNewTaskName(e.target.value)}
-        placeholder="Nombre"
-      />
-        
-      <input
-        type="text" // Campo de descripción
-        value={newTaskDescription}
-        onChange={(e) => setNewTaskDescription(e.target.value)}
-        placeholder="Descripcion"
-      />
-      <button onClick={handleAddTask}>
+      <FormControl>
+        <FormLabel>Nombre</FormLabel>
+        <Input
+          type="text"
+          value={newTaskName}
+          onChange={(e) => setNewTaskName(e.target.value)}
+          placeholder="Nombre"
+        />
+      </FormControl>
+
+      <FormControl mt="4">
+        <FormLabel>Descripción</FormLabel>
+        <Input
+          type="text"
+          value={newTaskDescription}
+          onChange={(e) => setNewTaskDescription(e.target.value)}
+          placeholder="Descripción"
+        />
+      </FormControl>
+
+      <Button mt="4" colorScheme="teal" onClick={handleAddTask}>
         {editingTaskId !== null ? "Guardar Cambios" : "Agregar Tarea"}
-      </button>
-      <br></br>
-      <span className="error" role="alert"  >
-        {nameError} {/* Mostrar mensaje de error */}
-      </span>
+      </Button>
+
+      {nameError && (
+        <FormErrorMessage color="red.500" mt="2">
+          {nameError}
+        </FormErrorMessage>
+      )}
+
       <TaskList
         tasks={tasks}
         onEdit={handleEditTask}
-        onDelete={deleteTask} // Utiliza la función deleteTask del hook
+        onDelete={deleteTask}
         onToggleComplete={handleToggleComplete}
         editingTaskId={editingTaskId}
       />
-      <div></div>
-    </div>
+    </Box>
   );
 };
 
